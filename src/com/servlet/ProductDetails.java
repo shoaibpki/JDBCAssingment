@@ -75,7 +75,6 @@ public class ProductDetails extends HttpServlet {
 				out.println("Product Name : "+ rs.getString("name")+"<br>");
 				out.println("Product Price : "+ rs.getDouble("price")+"<br>");
 				out.println("Product Price : "+ rs.getDate("date_added")+"<br>");
-				
 			}
 			
 			out.print("</body></html>");
