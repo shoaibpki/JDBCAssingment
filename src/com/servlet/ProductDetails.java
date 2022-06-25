@@ -3,9 +3,11 @@ package com.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 import java.util.Properties;
 
 import javax.servlet.ServletException;
@@ -35,16 +37,7 @@ public class ProductDetails extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			String pid = request.getParameter("pid");
 			PrintWriter out = response.getWriter();
 			out.print("<htm><body>");
 				
@@ -61,29 +54,45 @@ public class ProductDetails extends HttpServlet {
 				
 			// initialize DB connection
 			DBConnection conn = new DBConnection(url, user, password);
-				
+
 			// create select statement
-			Statement stmt = conn.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			Statement stmt = 
+					conn.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			
 			//make result set up on query
+			String pid = request.getParameter("pid");
 			String sql = "select * from eproduct where id = "+pid; 
 			ResultSet rs = stmt.executeQuery(sql);
 			
+			int size = rs.getFetchSize();
+			
+			if (size==0)
+				out.println("Given Product Id not found!");
+			
 			// show specific record
-			if (rs != null) {
-				out.append("Product Id : "+ rs.getInt("id")+"<br>");
-				out.append("Product Name : "+ rs.getString("name")+"<br>");
-				out.append("Product Price : "+ rs.getDouble("price")+"<br>");
-				out.append("Product Price : "+ rs.getDate("date_added")+"<br>");
+			while (rs.next()) {
+				out.println("Product Id : "+ rs.getInt("ID")+"<br>");
+				out.println("Product Name : "+ rs.getString("name")+"<br>");
+				out.println("Product Price : "+ rs.getDouble("price")+"<br>");
+				out.println("Product Price : "+ rs.getDate("date_added")+"<br>");
 				
-			}else
-				out.append("Giving Produc Id not Found!");
-				
+			}
+			
 			out.print("</body></html>");
+			stmt.close();
+			conn.closeConnection();
 		} catch (ClassNotFoundException | SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 		}
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 
 }
