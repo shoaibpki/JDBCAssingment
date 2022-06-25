@@ -4,6 +4,13 @@
   <artifactId>JDBCAssingment</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
+  <dependencies>
+  	<dependency>
+  		<groupId>mysql</groupId>
+  		<artifactId>mysql-connector-java</artifactId>
+  		<version>8.0.29</version>
+  	</dependency>
+  </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
